@@ -33,6 +33,14 @@ const HomeScreen = (props) => {
           onPress={() => props.navigation.navigate("Video")}
         />
       </View>
+
+      <View>
+        <Button
+          style={styles.btnInput}
+          title="Go to Simple Reducer Screen"
+          onPress={() => props.navigation.navigate("Reducer")}
+        />
+      </View>
    
     </View>
   );

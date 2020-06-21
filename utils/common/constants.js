@@ -1,0 +1,1 @@
+export const domainProd = 'https://oxfitnesslab.com';

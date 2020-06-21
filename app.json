@@ -22,7 +22,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.oxfitlesslab.gymapp",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.oxfitlesslab.gymapp",
+      "versionCode": 1
     }
   }
 }

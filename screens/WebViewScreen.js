@@ -7,6 +7,7 @@ import {
   Platform,
   BackHandler,
   Image,
+  ImageBackground,
 } from "react-native";
 import { DefaultTheme } from ".././utils/styles/common";
 import {
@@ -23,6 +24,7 @@ const WEBVIEW_REF = "WEBVIEW_REF";
 import { WebView } from "react-native-webview";
 import InternetStatusContext from "../context/InternetStatusContext";
 import InternetStatusAlert from "../components/InternetStatusAlert";
+import InternetStatusScreenAlert from "../components/InternetStatusScreenAlert";
 
 class WebViewScreen extends React.Component {
   static contextType = InternetStatusContext;
@@ -392,32 +394,7 @@ class WebViewScreen extends React.Component {
         </View>
       );
     } else {
-      return (
-        <View style={styles.textContainer}>
-          <Image
-            style={{
-              height: "85%",
-              width: "75%",
-              resizeMode: "contain",
-              // borderColor: "red",
-              // borderWidth: 3,
-            }}
-            source={require("../utils/common/img/logo_app.png")}
-          />
-          <Text
-            style={{
-              alignSelf: "center",
-              color: "red",
-              fontSize: 14,
-              fontWeight: "bold",
-              marginTop: Platform.OS === "ios" ? 1 : 5,
-            }}
-          >
-            No internet. Please check your connection and try again
-          </Text>
-          {/* <Button onPress={this.refreshScreen} title="Refresh Screen" /> */}
-        </View>
-      );
+      return <InternetStatusScreenAlert />;
     }
   }
 }
@@ -439,18 +416,6 @@ const styles = StyleSheet.create({
 
   webview: {
     zIndex: 1,
-  },
-  textContainer: {
-    flex: 1,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  imageStyle: {
-    alignSelf: "center",
-  },
-  offlineText: {
-    color: "red",
   },
 });
 

@@ -7,6 +7,7 @@ import { UserStore } from "../utils/store/user";
 import * as usersApi from "../utils/network/OflApi";
 import Loading from "./Loading";
 import InternetStatusContext from "../context/InternetStatusContext";
+import InternetStatusScreenAlert from "../components/InternetStatusScreenAlert";
 
 export default class DashboardScreen extends React.Component {
   static contextType = InternetStatusContext;
@@ -58,7 +59,7 @@ export default class DashboardScreen extends React.Component {
           </View>
         );
       case true:
-        if (this.context.internet === "true") {
+        if (this.context.internet === "true!") {
           // if (false) {
           return (
             <WebView
@@ -68,32 +69,7 @@ export default class DashboardScreen extends React.Component {
             />
           );
         } else {
-          return (
-            <View style={styles.textContainer}>
-              <Image
-                style={{
-                  height: "85%",
-                  width: "75%",
-                  resizeMode: "contain",
-                  // borderColor: "red",
-                  // borderWidth: 3,
-                }}
-                source={require("../utils/common/img/logo_app.png")}
-              />
-              <Text
-                style={{
-                  alignSelf: "center",
-                  color: "red",
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  marginTop: Platform.OS === "ios" ? 1 : 5,
-                }}
-              >
-                No internet. Please check your connection and try again
-              </Text>
-              {/* <Button onPress={this.refreshScreen} title="Refresh Screen" /> */}
-            </View>
-          );
+          return <InternetStatusScreenAlert />;
         }
       default:
         return <Loading />;

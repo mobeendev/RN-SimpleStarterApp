@@ -4,7 +4,7 @@ import { Video } from "expo-av";
 // import Video from 'react-native-video';
 import * as ScreenOrientation from "expo-screen-orientation";
 
-export default class VideoScreen extends React.Component {
+export default class VideoScreenSwitch extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -55,9 +55,9 @@ export default class VideoScreen extends React.Component {
             >
               <TouchableOpacity
                 style={styles.appButtonContainer}
-                onPress={() => this.props.navigation.navigate("Main")}
+                onPress={() => this.props.navigation.navigate("App")}
               >
-                <Text style={styles.appButtonText}>Go Back</Text>
+                <Text style={styles.appButtonText}>Go Back Switch</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.appButtonContainer}

@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
 import { Video } from "expo-av";
-// import Video from 'react-native-video';
 import * as ScreenOrientation from "expo-screen-orientation";
-
+import { AntDesign } from "@expo/vector-icons";
 export default class VideoScreen extends React.Component {
   static navigationOptions = {
     header: null,
@@ -19,7 +25,7 @@ export default class VideoScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Video
           source={{
             uri:
@@ -34,50 +40,87 @@ export default class VideoScreen extends React.Component {
           isLooping
           style={{
             height: "100%",
-            width: "90%",
-            borderColor: "gray",
-            borderWidth: 1,
+            width: "100%",
+            // borderColor: "gray",
+            // borderWidth: 1,
           }}
           useNativeControls={true}
-          // onReadyForDisplay={params => {
-          //   params.naturalSize.orientation = "landscape";
-          //   console.log("params---->", params.naturalSize.orientation);
-          // }}
         />
-        <View style={styles.ad_badge}>
-          <View style={{ flexDirection: "row", height: 300 }}>
+        <View
+          style={[
+            styles.ad_badge,
+            {
+              height: "50%",
+              position: "absolute",
+              right: Platform.OS === "ios" ? "5%" : "1%",
+            },
+          ]}
+        >
+          <View
+            style={{
+              flex: 1,
+              // backgroundColor: "blue",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <View
               style={{
-                backgroundColor: "red",
                 justifyContent: "flex-start",
-                alignItems: "center",
+                alignSelf: "stretch",
               }}
             >
               <TouchableOpacity
                 style={styles.appButtonContainer}
-                onPress={() => this.props.navigation.navigate("Main")}
-              >
-                <Text style={styles.appButtonText}>Go Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.appButtonContainer}
-                onPress={() => this.props.navigation.pop()}
-              >
-                <Text style={styles.appButtonText}>Go Back by Pop</Text>
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  textAlign: "center",
-                  // transform: [{ rotate: "-90deg" }],
+                onPress={async () => {
+                  await ScreenOrientation.lockAsync(
+                    ScreenOrientation.OrientationLock.PORTRAIT_UP
+                  );
+                  this.props.navigation.navigate("Main");
                 }}
               >
-                Here is some informatio for you lkjljlkj
-              </Text>
+                <AntDesign name="closecircle" size={24} color="white" />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                // backgroundColor: "orange",
+                flex: 1,
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="heart" size={24} color="red" />
+                <Text style={styles.ad_badge_text}> 22.51 </Text>
+              </View>
+
+              <View
+                style={{
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="clockcircleo" size={24} color="orange" />
+                <Text style={styles.ad_badge_text}> 22.51 </Text>
+              </View>
+              <View
+                style={{
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="piechart" size={24} color="blue" />
+
+                <Text style={styles.ad_badge_text}> 22.51 </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+        <StatusBar hidden />
+      </SafeAreaView>
     );
   }
 }
@@ -100,16 +143,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   ad_badge: {
-    width: "10%",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderRadius: 90,
   },
   ad_badge_text: {
-    color: "red",
+    color: "white",
+    fontSize: 12,
     textAlign: "center",
   },
   appButtonContainer: {
     elevation: 8,
     backgroundColor: "#000000",
     paddingVertical: 10,
+    width: "100%",
     paddingHorizontal: 12,
   },
   appButtonText: {

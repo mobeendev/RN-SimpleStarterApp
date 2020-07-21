@@ -10,7 +10,7 @@ import VideoScreenIos from "../screens/VideoScreenIos";
 import WebAppScreen from "../screens/WebAppScreen";
 import VideoScreen from "../screens/VideoScreen";
 import VideoScreenSwitch from "../screens/VideoScreenSwitch";
-import Reducer from "../screens/Reducer";
+import ExpoVideoPlayer from "../screens/ExpoVideoPlayer";
 
 const AppNavigator = createStackNavigator(
   {
@@ -19,6 +19,7 @@ const AppNavigator = createStackNavigator(
     VideoScreenIos: VideoScreenIos,
     VideoScreenAndroid: VideoScreenAndroid,
     VideoScreen: VideoScreen,
+    ExpoVideoPlayer: ExpoVideoPlayer,
   },
   {
     navigationOptions: {},

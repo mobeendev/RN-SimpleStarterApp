@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Animated,
+  Dimensions,
 } from "react-native";
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -14,18 +16,43 @@ export default class VideoScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
+  constructor(props) {
+    super(props);
+    this.state = { hovered: false, orientation: "" };
+  }
   async componentDidMount() {
-    await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-    );
+    this.getOrientation();
+    Dimensions.addEventListener("change", () => {
+      this.getOrientation();
+    });
+    //   await ScreenOrientation.lockAsync(
+    //     ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+    //   );
   }
   async componentWillUnmount() {
     await ScreenOrientation.unlockAsync();
   }
-
+  getOrientation = () => {
+    if (this.refs.rootView) {
+      if (Dimensions.get("window").width < Dimensions.get("window").height) {
+        this.setState({ orientation: "portrait" });
+      } else {
+        this.setState({ orientation: "landscape" });
+      }
+    }
+  };
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          {
+            flexDirection:
+              this.state.orientation == "portrait" ? "column" : "row",
+          },
+        ]}
+        ref="rootView"
+      >
         <Video
           source={{
             uri:
@@ -47,29 +74,20 @@ export default class VideoScreen extends React.Component {
           useNativeControls={true}
         />
         <View
-          style={[
-            styles.ad_badge,
-            {
-              height: "50%",
-              position: "absolute",
-              right: Platform.OS === "ios" ? "5%" : "1%",
-            },
-          ]}
+          style={
+            this.state.orientation == "portrait"
+              ? styles.ad_badge_portrait
+              : styles.ad_badge_landscape
+          }
         >
           <View
-            style={{
-              flex: 1,
-              // backgroundColor: "blue",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
+            style={
+              this.state.orientation == "portrait"
+                ? styles.info_bar_protrait
+                : styles.info_bar_landscape
+            }
           >
-            <View
-              style={{
-                justifyContent: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
+            <View>
               <TouchableOpacity
                 style={styles.appButtonContainer}
                 onPress={async () => {
@@ -79,23 +97,30 @@ export default class VideoScreen extends React.Component {
                   this.props.navigation.navigate("Main");
                 }}
               >
-                <AntDesign name="closecircle" size={24} color="white" />
+                <AntDesign
+                  style={{}}
+                  name="closecircle"
+                  size={24}
+                  color="white"
+                />
               </TouchableOpacity>
             </View>
             <View
-              style={{
-                // backgroundColor: "orange",
-                flex: 1,
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+              style={
+                this.state.orientation == "portrait"
+                  ? styles.info_bar_items_portrait
+                  : styles.info_bar_items_landscape
+              }
             >
+              {/* <Text style={{ color: "red" }}>
+                {this.state.orientation.toUpperCase()}
+              </Text> */}
               <View
                 style={{
                   alignItems: "center",
                 }}
               >
-                <AntDesign name="heart" size={24} color="red" />
+                <AntDesign style={{}} name="heart" size={24} color="red" />
                 <Text style={styles.ad_badge_text}> 22.51 </Text>
               </View>
 
@@ -105,7 +130,7 @@ export default class VideoScreen extends React.Component {
                 }}
               >
                 <AntDesign name="clockcircleo" size={24} color="orange" />
-                <Text style={styles.ad_badge_text}> 22.51 </Text>
+                <Text style={styles.ad_badge_text}> 65.01 </Text>
               </View>
               <View
                 style={{
@@ -114,7 +139,7 @@ export default class VideoScreen extends React.Component {
               >
                 <AntDesign name="piechart" size={24} color="blue" />
 
-                <Text style={styles.ad_badge_text}> 22.51 </Text>
+                <Text style={styles.ad_badge_text}> 17.38 </Text>
               </View>
             </View>
           </View>
@@ -128,7 +153,6 @@ export default class VideoScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
     backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
@@ -142,11 +166,59 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
   },
-  ad_badge: {
+  ad_badge_landscape: {
     // borderColor: "gray",
     // borderWidth: 1,
     // borderRadius: 90,
+
+    height: "50%",
+    position: "absolute",
+    right: Platform.OS === "ios" ? "5%" : "1%",
   },
+  ad_badge_portrait: {
+    // borderColor: "gray",
+    // borderWidth: 1,
+    flexDirection: "row",
+    width: "100%",
+    position: "absolute",
+    bottom: Platform.OS === "ios" ? "10%" : "1%",
+  },
+
+  info_bar_protrait: {
+    flex: 1,
+    // backgroundColor: "blue",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  info_bar_landscape: {
+    flex: 1,
+    // backgroundColor: "blue",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  info_bar_items_landscape: {
+    // backgroundColor: "white",
+    flex: 1,
+    alignItems: "center",
+    height: "100%",
+    justifyContent: "space-evenly",
+
+    flexDirection: "column",
+  },
+
+  info_bar_items_portrait: {
+    // backgroundColor: "orange",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    width: "100%",
+    flexDirection: "row",
+  },
+
   ad_badge_text: {
     color: "white",
     fontSize: 12,

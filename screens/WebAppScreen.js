@@ -12,12 +12,8 @@ const WebAppScreen = (props) => {
       startInLoadingState={true}
       originWhitelist={["*"]}
       onMessage={(event) => {
-        // alert(event.nativeEvent.data);
-        if (Platform.OS === "ios") {
-          props.navigation.navigate("VideoScreenIos");
-        } else {
-          props.navigation.navigate("VideoScreenAndroid");
-        }
+        alert(event.nativeEvent.data);
+        props.navigation.navigate("VideoScreen");
       }}
     />
   );

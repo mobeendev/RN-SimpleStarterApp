@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
+import * as Calendar from "expo-calendar";
 
 const HomeScreen = (props) => {
+  useEffect(() => {
+    (async () => {
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      if (status === "granted") {
+        const calendars = await Calendar.getCalendarsAsync();
+        console.log("Here are all your calendars:");
+        // console.log({ calendars });
+      }
+    })();
+  }, []);
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <View style={styles.btnInput}>
@@ -41,7 +53,13 @@ const HomeScreen = (props) => {
           onPress={() => props.navigation.navigate("Reducer")}
         />
       </View>
-   
+
+      <View style={styles.btnInput}>
+        <Button
+          title="Go to Simple Calendar Screen"
+          onPress={() => props.navigation.navigate("Calendar")}
+        />
+      </View>
     </View>
   );
 };

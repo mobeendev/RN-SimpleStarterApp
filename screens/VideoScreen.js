@@ -12,15 +12,27 @@ import {
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { AntDesign } from "@expo/vector-icons";
-export default class VideoScreen extends React.Component {
+import { withNavigation } from "react-navigation";
+
+class VideoScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
   constructor(props) {
     super(props);
-    this.state = { hovered: false, orientation: "" };
+    this.state = {
+      hovered: false,
+      orientation: "",
+      paramm: this.props.navigation.state.params,
+      videoUrl: null,
+    };
   }
   async componentDidMount() {
+    let videoInfo = JSON.parse(this.state.paramm.videoData);
+    console.log(videoInfo.data.url);
+    this.setState({
+      videoUrl: videoInfo.data.url,
+    });
     this.getOrientation();
     Dimensions.addEventListener("change", () => {
       this.getOrientation();
@@ -29,6 +41,23 @@ export default class VideoScreen extends React.Component {
     //     ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
     //   );
   }
+  _handleVideoRef = async (component) => {
+    console.log("called");
+    console.log("logging..", this.state.videoUrl);
+    const playbackObject = component;
+    if (playbackObject) {
+      await playbackObject.loadAsync({
+        uri: this.state.videoUrl,
+        // "https://player.vimeo.com/external/412136588.hd.mp4?s=7097bb39bf032d4dbbc5626aa3a3a3b2a83229a3&profile_id=175",
+        shouldPlay: false,
+        posterSource: this.poster,
+      });
+      // todo: Trigger fullScreen without videoStack loading
+      //playbackObject.presentFullscreenPlayer();
+      playbackObject.playAsync();
+      //playbackObject.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
+    }
+  };
   async componentWillUnmount() {
     await ScreenOrientation.unlockAsync();
   }
@@ -42,6 +71,14 @@ export default class VideoScreen extends React.Component {
     }
   };
   render() {
+    if (!this.state.videoUrl) {
+      return (
+        <View>
+          <Text>Loading....</Text>
+        </View>
+      );
+    }
+
     return (
       <SafeAreaView
         style={[
@@ -54,10 +91,7 @@ export default class VideoScreen extends React.Component {
         ref="rootView"
       >
         <Video
-          source={{
-            uri:
-              "https://player.vimeo.com/external/412136588.hd.mp4?s=7097bb39bf032d4dbbc5626aa3a3a3b2a83229a3&profile_id=175",
-          }}
+          ref={this._handleVideoRef}
           rate={1.0}
           volume={1.0}
           orientation="landscape"
@@ -149,6 +183,8 @@ export default class VideoScreen extends React.Component {
     );
   }
 }
+
+export default withNavigation(VideoScreen);
 
 const styles = StyleSheet.create({
   container: {
